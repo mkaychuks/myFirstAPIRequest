@@ -10,7 +10,7 @@ const TodoItem = (props) => {
         left={() => <List.Icon color={props.color} icon={props.icon} />}
         titleStyle={styles.title}
         right={() => (
-          <Pressable onPress={() => console.log('Delete button clicked')}>
+          <Pressable onPress={props.onDelete.bind(this, props.id)}>
             <List.Icon color={props.color} icon={"delete"} />
           </Pressable>
         )}

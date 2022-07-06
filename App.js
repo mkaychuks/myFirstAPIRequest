@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { Provider as PaperProvider, Avatar } from "react-native-paper";
+import { Provider as PaperProvider, Avatar, List } from "react-native-paper";
 import { StyleSheet, View, FlatList, Text } from "react-native";
 import React, { useState, useEffect } from "react";
 
@@ -10,12 +10,18 @@ export default function App() {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/todos?_limit=10")
+    fetch("https://jsonplaceholder.typicode.com/todos?_limit=30")
       .then((response) => response.json())
       .then((json) => setTodos(json))
       .catch((err) => console.err(err))
       .finally(() => setLoading(false));
-  });
+  }, []);
+
+  const deleteTodo = (id) => {
+    setTodos(currentTodo => {
+      return currentTodo.filter((todo) => todo.id !== id )
+    })
+  }
 
   return (
     <PaperProvider>
@@ -38,6 +44,8 @@ export default function App() {
                   title={item.title}
                   icon={item.id % 2 === 0 ? "calendar" : "folder"}
                   color={item.id % 2 === 0 ? "red" : "blue"}
+                  onDelete = {deleteTodo}
+                  id = {item.id}
                 />
               )}
             />
