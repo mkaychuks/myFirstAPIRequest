@@ -26,19 +26,22 @@ export default function App() {
             <Avatar.Image size={30} source={require("./assets/favicon.png")} />
           </View>
         ) : (
-          <FlatList
-            alwaysBounceVertical={false}
-            showsVerticalScrollIndicator={false}
-            data={todos}
-            keyExtractor={({ id }, index) => id}
-            renderItem={({ item }) => (
-              <TodoItem
-                title={item.title}
-                icon={item.id % 2 === 0 ? "calendar" : "folder"}
-                color={item.id % 2 === 0 ? "red" : "blue"}
-              />
-            )}
-          />
+          <View>
+            <Text style={styles.headerTitle}>Todos</Text>
+            <FlatList
+              alwaysBounceVertical={false}
+              showsVerticalScrollIndicator={false}
+              data={todos}
+              keyExtractor={({ id }, index) => id}
+              renderItem={({ item }) => (
+                <TodoItem
+                  title={item.title}
+                  icon={item.id % 2 === 0 ? "calendar" : "folder"}
+                  color={item.id % 2 === 0 ? "red" : "blue"}
+                />
+              )}
+            />
+          </View>
         )}
       </View>
     </PaperProvider>
@@ -59,4 +62,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  headerTitle: {
+    fontWeight: '700',
+    fontSize: 22,
+    margin: 8
+  }
 });

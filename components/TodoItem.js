@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import React from "react";
 import { List } from "react-native-paper";
 
@@ -9,6 +9,11 @@ const TodoItem = (props) => {
         title={props.title}
         left={() => <List.Icon color={props.color} icon={props.icon} />}
         titleStyle={styles.title}
+        right={() => (
+          <Pressable onPress={() => console.log('Delete button clicked')}>
+            <List.Icon color={props.color} icon={"delete"} />
+          </Pressable>
+        )}
       />
     </View>
   );
