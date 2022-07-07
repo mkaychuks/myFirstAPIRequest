@@ -1,14 +1,23 @@
 import { StatusBar } from "expo-status-bar";
 import { Provider as PaperProvider, Avatar } from "react-native-paper";
-import { StyleSheet, View, FlatList, Text, Pressable } from "react-native";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Text,
+  Pressable,
+  RefreshControl,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 
 import TodoItem from "./components/TodoItem";
 
 export default function App() {
-  const [isLoading, setLoading] = useState(true);
-  const [todos, setTodos] = useState([]);
+  const [isLoading, setLoading] = useState(true); // page loading state
+  const [todos, setTodos] = useState([]); // set todos from the API
+  const [controlRefreshing, setControlRefreshing] = useState(false); // refreshing control
 
+  // fetch todos "jsonplaceholder.typicode.com"
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/todos?_limit=30")
       .then((response) => response.json())
@@ -17,14 +26,23 @@ export default function App() {
       .finally(() => setLoading(false));
   }, []);
 
+  // delete a todo with "id" from the API call
   const deleteTodo = (id) => {
     setTodos((currentTodo) => {
       return currentTodo.filter((todo) => todo.id !== id);
     });
   };
 
+  // delete all todos from the API call
   const deleteAllTodo = () => {
     setTodos([]);
+  };
+
+  // what will happen after the refresh is done:
+  const onRefreshComplete = () => {
+    setControlRefreshing(true);
+    console.warn("Refresh complete");
+    setControlRefreshing(false);
   };
 
   return (
@@ -54,6 +72,12 @@ export default function App() {
               </Pressable>
             </Text>
             <FlatList
+              refreshControl={
+                <RefreshControl
+                  refreshing={controlRefreshing}
+                  onRefresh={onRefreshComplete}
+                />
+              }
               alwaysBounceVertical={false}
               showsVerticalScrollIndicator={false}
               data={todos}
@@ -77,7 +101,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 30,
+    marginTop: 50,
     backgroundColor: "#fff",
     paddingHorizontal: 10,
     flex: 1,
