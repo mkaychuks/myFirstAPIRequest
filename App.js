@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { Provider as PaperProvider, Avatar } from "react-native-paper";
+import { Provider as PaperProvider, Avatar, List } from "react-native-paper";
 import {
   StyleSheet,
   View,
@@ -16,7 +16,7 @@ export default function App() {
   const [isLoading, setLoading] = useState(true); // page loading state
   const [posts, setposts] = useState([]); // set posts from the API
   const [controlRefreshing, setControlRefreshing] = useState(false); // refreshing control
-  const [postID, setPostID] = useState(3) // a handle ID for the param in the API call
+  const [postID, setPostID] = useState(3); // a handle ID for the param in the API call
 
   // fetch posts "jsonplaceholder.typicode.com"
   useEffect(() => {
@@ -36,16 +36,15 @@ export default function App() {
 
   // delete all posts from the API call
   const deleteAllTodo = () => {
-    setposts([]); 
+    setposts([]);
   };
-
 
   // what will happen after the refresh is done:
   const onRefreshComplete = () => {
-    setPostID(Math.floor(Math.random() * 100) + 4)
+    setPostID(Math.floor(Math.random() * 100) + 4);
     setControlRefreshing(true);
     fetch(`https://jsonplaceholder.typicode.com/posts/${postID}`)
-    .then((response) => response.json())
+      .then((response) => response.json())
       .then((json) => setposts([...posts, json]))
       .catch((err) => console.err(err))
       .finally(() => setControlRefreshing(false));
@@ -53,30 +52,30 @@ export default function App() {
 
   return (
     <PaperProvider>
-      <View style={styles.container}>
-        <StatusBar style="auto" />
-        {isLoading ? (
-          <View style={styles.loadingText}>
-            <Avatar.Image size={30} source={require("./assets/favicon.png")} />
+      {isLoading ? (
+        <View style={styles.loadingText}>
+          <Avatar.Image size={100} source={require("./assets/icon.png")} />
+          <Text style={{ fontStyle: "italic", fontSize: 10, marginTop: 8 }}>
+            retrieving posts
+          </Text>
+        </View>
+      ) : (
+        <View style={styles.mainContainer}>
+          {/* The container housing the header */}
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerTitle}>Posts</Text>
+            <Pressable onPress={deleteAllTodo}>
+              <List.Icon color="red" icon={"delete-forever"} />
+            </Pressable>
           </View>
-        ) : (
-          <View>
-            <Text style={styles.headerTitle}>
-              posts
-              <Pressable onPress={deleteAllTodo} style={{ marginLeft: 15 }}>
-                <Text
-                  style={{
-                    color: "blue",
-                    opacity: 0.3,
-                    fontStyle: "italic",
-                    textTransform: "lowercase",
-                    fontSize: 12,
-                  }}
-                >
-                  Empty List
-                </Text>
-              </Pressable>
-            </Text>
+
+          {/* The container that will house the list item */}
+          <View
+            style={{
+              width: "100%",
+              marginTop: 15,
+            }}
+          >
             <FlatList
               refreshControl={
                 <RefreshControl
@@ -91,37 +90,44 @@ export default function App() {
               renderItem={({ item }) => (
                 <TodoItem
                   title={item.title}
-                  icon={item.id % 2 === 0 ? "calendar" : "folder"}
-                  color={item.id % 2 === 0 ? "red" : "blue"}
+                  icon={"newspaper"}
+                  color={"black"}
                   onDelete={deleteTodo}
                   id={item.id}
                 />
               )}
             />
           </View>
-        )}
-      </View>
+        </View>
+      )}
     </PaperProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 50,
-    backgroundColor: "#fff",
+  mainContainer: {
+    flex: 1,
+    width: "100%",
     paddingHorizontal: 10,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "stretch",
+    marginTop: 30,
   },
-  loadingText: {
-    flex: 1,
-    justifyContent: "center",
+  headerContainer: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
+    paddingBottom: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
   },
   headerTitle: {
     fontWeight: "700",
     fontSize: 22,
     margin: 8,
+  },
+  loadingText: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

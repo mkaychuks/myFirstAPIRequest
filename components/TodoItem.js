@@ -11,7 +11,7 @@ const TodoItem = (props) => {
         titleStyle={styles.title}
         right={() => (
           <Pressable onPress={props.onDelete.bind(this, props.id)}>
-            <List.Icon color={props.color} icon={"delete"} />
+            <List.Icon color="red" icon={"file-upload"} />
           </Pressable>
         )}
       />
