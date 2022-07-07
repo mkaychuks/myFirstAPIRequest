@@ -14,35 +14,38 @@ import TodoItem from "./components/TodoItem";
 
 export default function App() {
   const [isLoading, setLoading] = useState(true); // page loading state
-  const [todos, setTodos] = useState([]); // set todos from the API
+  const [posts, setposts] = useState([]); // set posts from the API
   const [controlRefreshing, setControlRefreshing] = useState(false); // refreshing control
 
-  // fetch todos "jsonplaceholder.typicode.com"
+  // fetch posts "jsonplaceholder.typicode.com"
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/todos?_limit=30")
+    fetch("https://jsonplaceholder.typicode.com/posts?_limit=2")
       .then((response) => response.json())
-      .then((json) => setTodos(json))
+      .then((json) => setposts(json))
       .catch((err) => console.err(err))
       .finally(() => setLoading(false));
   }, []);
 
   // delete a todo with "id" from the API call
   const deleteTodo = (id) => {
-    setTodos((currentTodo) => {
+    setposts((currentTodo) => {
       return currentTodo.filter((todo) => todo.id !== id);
     });
   };
 
-  // delete all todos from the API call
+  // delete all posts from the API call
   const deleteAllTodo = () => {
-    setTodos([]);
+    setposts([]);
   };
 
   // what will happen after the refresh is done:
   const onRefreshComplete = () => {
     setControlRefreshing(true);
-    console.warn("Refresh complete");
-    setControlRefreshing(false);
+    fetch('https://jsonplaceholder.typicode.com/posts/4')
+    .then((response) => response.json())
+      .then((json) => setposts([...posts, json]))
+      .catch((err) => console.err(err))
+      .finally(() => setControlRefreshing(false));
   };
 
   return (
@@ -56,7 +59,7 @@ export default function App() {
         ) : (
           <View>
             <Text style={styles.headerTitle}>
-              Todos
+              posts
               <Pressable onPress={deleteAllTodo} style={{ marginLeft: 15 }}>
                 <Text
                   style={{
@@ -80,7 +83,7 @@ export default function App() {
               }
               alwaysBounceVertical={false}
               showsVerticalScrollIndicator={false}
-              data={todos}
+              data={posts}
               keyExtractor={({ id }, index) => id}
               renderItem={({ item }) => (
                 <TodoItem
