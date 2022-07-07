@@ -42,7 +42,7 @@ export default function App() {
 
   // what will happen after the refresh is done:
   const onRefreshComplete = () => {
-    setPostID(Math.floor(Math.random() * 11) + 4)
+    setPostID(Math.floor(Math.random() * 100) + 4)
     setControlRefreshing(true);
     fetch(`https://jsonplaceholder.typicode.com/posts/${postID}`)
     .then((response) => response.json())
