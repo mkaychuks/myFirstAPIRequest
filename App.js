@@ -16,10 +16,11 @@ export default function App() {
   const [isLoading, setLoading] = useState(true); // page loading state
   const [posts, setposts] = useState([]); // set posts from the API
   const [controlRefreshing, setControlRefreshing] = useState(false); // refreshing control
+  const [postID, setPostID] = useState(3) // a handle ID for the param in the API call
 
   // fetch posts "jsonplaceholder.typicode.com"
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/posts?_limit=2")
+    fetch(`https://jsonplaceholder.typicode.com/posts?_limit=2`)
       .then((response) => response.json())
       .then((json) => setposts(json))
       .catch((err) => console.err(err))
@@ -35,13 +36,15 @@ export default function App() {
 
   // delete all posts from the API call
   const deleteAllTodo = () => {
-    setposts([]);
+    setposts([]); 
   };
+
 
   // what will happen after the refresh is done:
   const onRefreshComplete = () => {
+    setPostID(Math.floor(Math.random() * 11) + 4)
     setControlRefreshing(true);
-    fetch('https://jsonplaceholder.typicode.com/posts/4')
+    fetch(`https://jsonplaceholder.typicode.com/posts/${postID}`)
     .then((response) => response.json())
       .then((json) => setposts([...posts, json]))
       .catch((err) => console.err(err))
